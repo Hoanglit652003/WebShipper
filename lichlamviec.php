@@ -58,9 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_employee'])) {
     $soDienThoai = $mysqli->real_escape_string($_POST['soDienThoai']);
     $diaChi = $mysqli->real_escape_string($_POST['diaChi']);
     $password = $mysqli->real_escape_string($_POST['password']);
+    $viTri = $mysqli->real_escape_string($_POST['viTri']);
     
-    $stmt = $mysqli->prepare("INSERT INTO NhanVien (tenNhanVien, Email, soDienThoai, diaChi, phanQuyen, Password) VALUES (?, ?, ?, ?, 2, ?)");
-    $stmt->bind_param("sssss", $tenNhanVien, $email, $soDienThoai, $diaChi, $password);
+    $stmt = $mysqli->prepare("INSERT INTO NhanVien (tenNhanVien, Email, soDienThoai, diaChi, phanQuyen, Password, viTri) VALUES (?, ?, ?, ?, 2, ?, ?)");
+    $stmt->bind_param("ssssss", $tenNhanVien, $email, $soDienThoai, $diaChi, $password, $viTri);
     
     if ($stmt->execute()) {
         $actionMessage = "Thêm nhân viên mới thành công!";
@@ -94,9 +95,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_employee'])) {
     $email = $mysqli->real_escape_string($_POST['email']);
     $soDienThoai = $mysqli->real_escape_string($_POST['soDienThoai']);
     $diaChi = $mysqli->real_escape_string($_POST['diaChi']);
+    $viTri = $mysqli->real_escape_string($_POST['viTri']);
     
-    $stmt = $mysqli->prepare("UPDATE NhanVien SET tenNhanVien=?, Email=?, soDienThoai=?, diaChi=? WHERE Id_nhanVien=?");
-    $stmt->bind_param("ssssi", $tenNhanVien, $email, $soDienThoai, $diaChi, $id);
+    $stmt = $mysqli->prepare("UPDATE NhanVien SET tenNhanVien=?, Email=?, soDienThoai=?, diaChi=?, viTri=? WHERE Id_nhanVien=?");
+    $stmt->bind_param("sssssi", $tenNhanVien, $email, $soDienThoai, $diaChi, $viTri, $id);
     
     if ($stmt->execute()) {
         $actionMessage = "Cập nhật thông tin nhân viên thành công!";
@@ -474,6 +476,14 @@ if (isset($_GET['staff_id'])) {
                 <label>Địa chỉ:</label>
                 <textarea name="diaChi" class="form-control" required></textarea>
             </div>
+            <div class="form-group">
+                <label>Vị trí:</label>
+                <select name="viTri" class="form-control" required>
+                    <option value="">-- Chọn vị trí --</option>
+                    <option value="Quản lý">Quản lý</option>
+                    <option value="Giao hàng">Giao hàng</option>
+                </select>
+            </div>
             <button type="submit" name="add_employee" class="btn">Thêm nhân viên</button>
         </form>
     </div>
@@ -502,6 +512,14 @@ if (isset($_GET['staff_id'])) {
                 <label>Địa chỉ:</label>
                 <textarea name="diaChi" id="edit_diaChi" class="form-control" required></textarea>
             </div>
+            <div class="form-group">
+                <label>Vị trí:</label>
+                <select name="viTri" id="edit_viTri" class="form-control" required>
+                    <option value="">-- Chọn vị trí --</option>
+                    <option value="Quản lý">Quản lý</option>
+                    <option value="Giao hàng">Giao hàng</option>
+                </select>
+            </div>
             <button type="submit" name="edit_employee" class="btn">Cập nhật</button>
         </form>
     </div>
@@ -514,6 +532,7 @@ function openEditModal(employee) {
     document.getElementById('edit_email').value = employee.Email;
     document.getElementById('edit_soDienThoai').value = employee.soDienThoai;
     document.getElementById('edit_diaChi').value = employee.diaChi;
+    document.getElementById('edit_viTri').value = employee.viTri;
     document.getElementById('editEmployeeModal').style.display = 'block';
 }
 
